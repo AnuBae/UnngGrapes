@@ -31,7 +31,6 @@ class Search extends CI_Controller
 
         $data['arrKeyword'] = $this->olahKeyword($data['keyword']);
         $data['lowongan'] = $this->search->getLowongan($data['arrKeyword']);
-        $data['total_rows'] = $this->search->countAllRows($data['arrKeyword']);
 
         // jika kata kunci tidak ditemukan
         if (empty($data['lowongan'])) {
@@ -44,7 +43,8 @@ class Search extends CI_Controller
             // hitung nilai TF
             $data['nilai_tf'] = $this->fungsiHitungTF($data['lowongan'], $data['arrKeyword']);
             // hitung nilai IDF
-            $data['nilai_idf'] = $this->fungsiHitungIDF($data['nilai_tf'], $data['arrKeyword'], $data['total_rows']);
+            $data['total_rows'] = count($data['nilai_tf']);
+            $data['nilai_idf'] = $this->fungsiHitungIDF($data['nilai_tf'], $data['arrKeyword']);
             // hitung nilai tf*idf
             $data['nilai_tfidf'] = $this->fungsiHitungTFIDF($data['nilai_tf'], $data['nilai_idf'], $data['arrKeyword']);
 
@@ -88,8 +88,7 @@ class Search extends CI_Controller
         $nilai_tf = array();
         foreach ($dataLowongan as $colLow) {
             // untuk setiap stem_detail
-            $arrKalimat = explode(' ', $colLow['stem_detail']);
-
+            $kalimat = $colLow['stem_detail'];
             $counter = array();
 
             $counter['id_tf'] = $colLow['id_lowongan'];
@@ -98,22 +97,15 @@ class Search extends CI_Controller
 
             $allTf = 0;
             foreach ($arrKeyword as $key) {
-                $tf = 0;
-                foreach ($arrKalimat as $kal) {
-                    // jika keyword sama dengan kata pada stem_detail
-                    if ($key == $kal) {
-                        $tf++;
-                        $allTf++;
-                    }
-                }
-                $counter[$key] = $tf;
+                $counter[$key] = substr_count($kalimat, $key);
+                $allTf += $counter[$key];
             }
             $counter['total_tf'] = $allTf;
 
             // jika nilainya nol maka dihilangkan dari list
-            // if($allTf != 0){
-            array_push($nilai_tf, $counter);
-            // }
+            if ($allTf != 0) {
+                array_push($nilai_tf, $counter);
+            }
         }
 
         // mensorting $nilai_tfidf descending
@@ -123,25 +115,30 @@ class Search extends CI_Controller
         return $nilai_tf;
     }
 
-    public function fungsiHitungIDF($nilai_tf, $arrKeyword, $dataTotalRows)
+    public function fungsiHitungIDF($nilai_tf, $arrKeyword)
     {
         $nilai_idf = array();
         foreach ($arrKeyword as $key) {
-            $counter = 0;
-            foreach ($nilai_tf as $tf) {
-                if ($tf[$key] != 0)
-                    $counter++;
-            }
             $df['term'] = $key;
-            $df['df'] = $counter;
-            if (!$counter == 0) {
+
+            $counterDF = 0;
+            foreach ($nilai_tf as $tf) {
+                if ($tf[$key] !== 0)
+                    ++$counterDF;
+            }
+            $df['df'] = $counterDF;
+
+            // count rows $nilai_tf
+            $TotalRows = count($nilai_tf);
+
+            if ($counterDF !== 0) {
                 try {
-                    $df['idf'] = log($dataTotalRows / $counter);
+                    $df['idf'] = log10($TotalRows / $counterDF);
                 } catch (DivisionByZeroError $e) {
                     $df['idf'] = $e;
                 }
             } else {
-                $df['idf'] = $counter;
+                $df['idf'] = $counterDF;
             }
 
             array_push($nilai_idf, $df);
