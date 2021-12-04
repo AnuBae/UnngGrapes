@@ -20,7 +20,7 @@ class Search extends CI_Controller
 
             if ($data['keyword'] == '') {
                 // jika keyword kosong
-                $this->session->set_userdata('alert', '1');
+                $this->session->set_userdata('alert', 'nullKeyword');
                 redirect(base_url());
             }
 
@@ -34,7 +34,7 @@ class Search extends CI_Controller
 
         // jika kata kunci tidak ditemukan
         if (empty($data['lowongan'])) {
-            $this->session->set_userdata('alert', '2');
+            $this->session->set_userdata('alert', 'keywordNotFound');
             $this->session->set_userdata('keyword', $data['keyword']);
             redirect(base_url());
         } else {
@@ -46,7 +46,7 @@ class Search extends CI_Controller
             $data['total_rows'] = count($data['nilai_tf']);
             $data['nilai_idf'] = $this->fungsiHitungIDF($data['nilai_tf'], $data['arrKeyword']);
             // hitung nilai tf*idf
-            $data['nilai_tfidf'] = $this->fungsiHitungTFIDF($data['nilai_tf'], $data['nilai_idf'], $data['arrKeyword']);
+            $data['nilai_tfidf'] = $this->fungsiHitungTFIDF($data['lowongan'], $data['nilai_tf'], $data['nilai_idf'], $data['arrKeyword']);
 
             $this->load->view('template/Header', $data);
             $this->load->view('search/Index', $data);
@@ -147,15 +147,21 @@ class Search extends CI_Controller
         return $nilai_idf;
     }
 
-    public function fungsiHitungTFIDF($nilai_tf, $nilai_idf, $arrKeyword)
+    public function fungsiHitungTFIDF($dataLowongan, $nilai_tf, $nilai_idf, $arrKeyword)
     {
         $nilai_tfidf = array();
         foreach ($nilai_tf as $tf) {
             $counter = array();
 
             $counter['id_tfidf'] = $tf['id_tf'];
-            $counter['title_tfidf'] = $tf['title_tf'];
-            $counter['link_tfidf'] = $tf['link_tf'];
+            foreach ($dataLowongan as $colLow) {
+                if ($colLow['id_lowongan'] == $counter['id_tfidf']) {
+                    $counter['title_tfidf'] = $colLow['title_lowongan'];
+                    $counter['perusahaan_tfidf'] = $colLow['nama_perusahaan'];
+                    $counter['lokasi_tfidf'] = $colLow['lokasi_perusahaan'];
+                    $counter['link_tfidf'] = $colLow['link_lowongan'];
+                }
+            }
 
             $allTfidf = 0;
             foreach ($arrKeyword as $key) {

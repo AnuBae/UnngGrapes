@@ -1,6 +1,6 @@
 <!-- search start -->
 <div class="container position-absolute top-50 start-50 translate-middle">
-    <?php if($this->session->userdata('alert') == '2') : ?>
+    <?php if ($this->session->userdata('alert') == 'keywordNotFound') : ?>
 
         <div class="container col-md-6">
             <form action="<?= base_url(); ?>search" method="post">
@@ -42,11 +42,11 @@
             <p class="lead">Cara Keren Anti Nganggur!</p>
         </div>
 
-        <?php if($this->session->userdata('alert') == '1'): ?>
-        <div class="alert alert-danger alert-dismissible fade show col-md-8 mx-auto" role="alert">
-            <strong class="md"><i class="bi bi-exclamation-triangle-fill"></i> Kata Kunci Anda Kosong!</strong> Pastikan form pencarian telah terisi...
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
+        <?php if ($this->session->userdata('alert') == 'nullKeyword') : ?>
+            <div class="alert alert-danger alert-dismissible fade show col-md-8 mx-auto" role="alert">
+                <strong class="md"><i class="bi bi-exclamation-triangle-fill"></i> Kata Kunci Anda Kosong!</strong> Pastikan form pencarian telah terisi...
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
         <?php endif; ?>
 
         <div class="container col-md-6  text-center">
