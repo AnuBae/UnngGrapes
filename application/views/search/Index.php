@@ -7,7 +7,7 @@
                     <div class="portfolio-item mx-auto">
                         <table class="table text-center" id="table_akhir" style="width:100%">
                             <thead>
-                                <h3 class="masthead-subheading text-center font-weight-bold mb-3">List Rekomendasi Lowongan Kerja</h3>
+                                <h3 class="masthead-subheading text-center font-weight-bold mb-3">List Lowongan Kerja</h3>
                                 <tr>
                                     <th>NO</th>
                                     <th>Lowongan</th>
@@ -42,7 +42,7 @@
 
             <p>
                 <button class="btn btn-outline-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#hideContent" aria-expanded="false" aria-controls="collapseExample">
-                    Lihat Pembobotan Rekomendasi
+                    Lihat Pembobotan
                 </button>
             </p>
 

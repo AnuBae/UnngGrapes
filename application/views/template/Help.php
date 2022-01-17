@@ -19,7 +19,7 @@
                                 <div class="container mb-3 p-3">
                                     <h4 class="pt-3 mb-3">Petunjuk pemakaian:</h4>
 
-                                    <p>Artikel ini ditujukan untuk pengguna yang bingung dengan cara pemakain situs ini. Pertama yang harus disiapkan sebelum memulai mencari informasi lowongan kerja yang relevan dengan keinginan anda dipersilahkan untuk mempersiapkan terlebih dahulu kata kunci yang mempersentasikan dan atau setidaknya mewakili salah satu, beberapa atau seluruhnya dari posisi jabatan, bidang pekerjaan, lokasi pilihan, dan nama perusahaan.</p>
+                                    <p>Artikel ini ditujukan untuk pengguna yang bingung dengan cara pemakain situs ini. Pertama yang harus disiapkan sebelum memulai <b>mencari informasi lowongan kerja</b> yang relevan dengan keinginan anda adalah mempersiapkan kata kunci yang mempersentasikan dan atau setidaknya mewakili salah satu, beberapa atau seluruhnya dari posisi jabatan, bidang pekerjaan, lokasi pilihan, dan nama perusahaan.</p>
                                     <p>Jika telah anda tentukan, silahkan ikuti langkah berikut: Isi <b>Kata Kunci Pilihan</b> anda pada Search Form kemudian <b>Tekan</b> Search Button, Enjoy!</p>
                                 </div>
                                 <hr>
@@ -41,7 +41,7 @@
                                             <input name="email" type="email" class="form-control" id="email" placeholder="email_anda@example.com">
                                         </div>
                                         <div class="mb-3">
-                                            <label for="question" class="form-label">Pertanyaan</label>
+                                            <label for="question" class="form-label">Pesan</label>
                                             <textarea name="question" class="form-control" id="question" rows="3"></textarea>
                                         </div>
 
@@ -58,7 +58,7 @@
                     </td>
                 </tr>
             </div>
-            
+
         </div>
     </div>
 </div>
@@ -76,8 +76,11 @@
         // ketika btn-kirim diklik
         // tampilkan btn-loading, hilangkan btn-kirim
         btnLoading.classList.toggle('d-none');
-        btnKirim.classList.toggle('d-none'); 
-        fetch(scriptURL, { method: 'POST', body: new FormData(form)})
+        btnKirim.classList.toggle('d-none');
+        fetch(scriptURL, {
+                method: 'POST',
+                body: new FormData(form)
+            })
             .then(response => {
                 // tampilkan btn-kirim, hilangkan btn-loading
                 btnLoading.classList.toggle('d-none');
